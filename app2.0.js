@@ -5,7 +5,7 @@ let filename;
 let mp4url;
 let src;
 // 此处为91pron的首页地址,这里一定要输入首页地址,否则后面全部无法解析,这里的地址不一定是对的,毕竟总换
-let Url = 'http://email.91dizhi.at.gmail.com.7h4.space/index.php'
+let Url = 'http://91.91p17.space/index.php'
 request({url: Url}, function (err, res, body) {
     if (err) {
         console.log(err)
@@ -23,29 +23,31 @@ request({url: Url}, function (err, res, body) {
                     let videoUrl = $('#videobox .listchannel>div>a')
                     // let videoName = $('#videobox .listchannel>div>a>img')
                     // 控制爬取每页的视频数量,每页有20个视频
-                    for (let i = 0; i < 1; i++) {
+                    for (let i = 0; i < 20; i++) {
 
                         let mp4url = videoUrl[i].attribs.href;
-                        console.log(mp4url)
+                        // console.log(mp4url)
                         // 解析视频的真实地址
                         // setTimeout(jiexi(mp4url),1000)
                         // function jiexi(url) {
 
-
+                        let oneIp = Math.floor(Math.random()*255)
+                        let randomIp = oneIp + '.' + oneIp + '.' + oneIp
+                        console.log(randomIp)
+                        let referer = 'http://91.91p17.space/v.php?next=watch'
                         request({
                             url: mp4url,
                             // 此处为设置代理,这里的代理需要自己去爬,我做了测试,西祠代理的质量不高,基本不能用,代理请自己搞定
-                            proxy: 'http://180.112.217.65:8118/',
                             method: 'GET',
-                            headers: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
+                            headers: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36','X-Forwarded-For':randomIp,'referer':referer}
                         }, function (err, response, body) {
                             // console.log(response)
                             console.log(err)
                             let $ = cheerio.load(body)
-                            let src = $('#vid source').attr('src')
+                            let src = $('source').attr('src')
                             console.log(src)
                             let name = $('#videodetails-content a span').text()
-                            let filename = './data/' + name + '.txt'
+                            let filename = name
                             save(filename, src)
                         })
                         //   }
@@ -53,13 +55,27 @@ request({url: Url}, function (err, res, body) {
                     // 在data目录下存储解析的视频地址,文件名为发布者姓名
                     // 运行时如果报错,请自己建立data目录
                     function save(x, y) {
-                        fs.appendFile(x, y, function (err) {
+                        let line;
+                        name = x;
+                        src = y;
+                        line = `${name.replace(/\n/g, '')},${src}\n`;
+                        // line = src;
+                        // fs.appendFile(x, y, function (err) {
+                        //     if (err) {
+                        //         console.log(err)
+                        //     } else {
+                        //         console.log('The "data to append" was appended to file!');
+                        //     }
+                        // });
+                        fs.appendFile('./data/url.csv', `${line}\n`, 'utf8', (err) => {
                             if (err) {
                                 console.log(err)
                             } else {
-                                console.log('The "data to append" was appended to file!');
+                                console.log('suceeess')
                             }
+                            
                         });
+
                     }
                 }
             })

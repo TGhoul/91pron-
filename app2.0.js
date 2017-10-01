@@ -5,7 +5,7 @@ let filename;
 let mp4url;
 let src;
 // 此处为91pron的首页地址,这里一定要输入首页地址,否则后面全部无法解析,这里的地址不一定是对的,毕竟总换
-let Url = 'http://91.91p17.space/index.php'
+let Url = 'http://www.91porn.com/index.php'
 request({url: Url}, function (err, res, body) {
     if (err) {
         console.log(err)
@@ -31,8 +31,9 @@ request({url: Url}, function (err, res, body) {
                         // setTimeout(jiexi(mp4url),1000)
                         // function jiexi(url) {
 
-                        let oneIp = Math.floor(Math.random()*255)
-                        let randomIp = oneIp + '.' + oneIp + '.' + oneIp
+                     
+                        let randomIp = Math.floor(Math.random()*255) + '.' + Math.floor(Math.random()*255) + '.' + Math.floor(Math.random()*255)
+                
                         console.log(randomIp)
                         let referer = 'http://91.91p17.space/v.php?next=watch'
                         request({
@@ -58,7 +59,7 @@ request({url: Url}, function (err, res, body) {
                         let line;
                         name = x;
                         src = y;
-                        line = `${name.replace(/\n/g, '')},${src}\n`;
+                        line = `${name.replace(/\n/g, '')},${src}`;
                         // line = src;
                         // fs.appendFile(x, y, function (err) {
                         //     if (err) {
